@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PathPilot Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #173b67;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #cccccc;
+        }
+
+        a {
+            display: inline-block;
+            background: #173b67;
+            color: white;
+            padding: 12px 18px;
+            margin: 8px 8px 0 0;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        a:hover {
+            background: #28578c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>PathPilot</h1>
+        <p>Student Skill-to-Opportunity Intelligence</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- Dashboard Summary Cards -->
+        <div class="card">
+            <h2>Dashboard Summary</h2>
+
+            <p>
+                <strong>My Skills:</strong>
+                {{ skills_count }}
+            </p>
+
+            <p>
+                <strong>My Applications:</strong>
+                {{ applications_count }}
+            </p>
+
+            <p>
+                <strong>Matching Opportunities:</strong>
+                {{ recommendations_count }}
+            </p>
+
+            <a href="{{ url_for('profile') }}">My Profile</a>
+            <a href="{{ url_for('skills') }}">My Skills</a>
+            <a href="{{ url_for('my_applications') }}">My Applications</a>
+            <a href="{{ url_for('recommendations') }}">
+                Recommended Opportunities
+            </a>
+        </div>
+
+
+        <div class="card">
+            <h2>Welcome to PathPilot!</h2>
+           
+            <p>You have logged in successfully.</p>
+            <p><strong>Name:</strong> {{ student.name }}</p>
+<p><strong>Email:</strong> {{ student.email }}</p>
+<p><strong>Branch:</strong> {{ student.branch }}</p>
+<p><strong>Year:</strong> {{ student.year }}</p>
+
+
+<div class="card">
+    <h2>My Saved Skills</h2>
+
+    {% if skills %}
+        <ul>
+            {% for skill in skills %}
+                <li>
+                    <strong>{{ skill.skill_name }}</strong>
+                    — {{ skill.proficiency }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You haven't saved any skills yet.</p>
+    {% endif %}
+
+    <a href="{{ url_for('skills') }}">Update My Skills</a>
+    <a href="{{ url_for('recommendations') }}">
+    Smart Recommendations
+</a>
+</div>
+
+
+        <div class="card">
+            <h2>Explore PathPilot</h2>
+            <p>Discover opportunities and manage your skills.</p>
+
+                       <a href="{{ url_for('opportunities') }}">View Opportunities</a>
+
+            <a href="{{ url_for('skills') }}">My Skills</a>
+
+            <a href="{{ url_for('recommendations') }}">Smart Recommendations</a>
+
+            <a href="{{ url_for('my_applications') }}">My Applications</a>
+
+            <a href="{{ url_for('notifications') }}">My Notifications</a>
+
+            <a href="{{ url_for('profile') }}">My Profile</a>
+
+            <a href="{{ url_for('student_logout') }}">Logout</a>
+        </div>
+
+    </div>
+
+</body>
+</html>

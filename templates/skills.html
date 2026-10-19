@@ -1,0 +1,418 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Skills - PathPilot</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f0f4f8;
+            color: #243247;
+        }
+
+        header {
+            background: #173b67;
+            color: white;
+            padding: 22px;
+            text-align: center;
+        }
+
+        nav {
+            background: #102b4c;
+            padding: 12px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 12px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .intro, .skill-section {
+            background: white;
+            padding: 22px;
+            margin-bottom: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #d9e0e8;
+        }
+
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 15px;
+        }
+
+        .skill-card {
+            border: 1px solid #dce4ed;
+            padding: 15px;
+            border-radius: 10px;
+            background: #fff;
+        }
+
+        .skill-card:hover {
+            border-color: #3976b9;
+        }
+
+        .skill-card label {
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .skill-card input[type="checkbox"] {
+            margin-right: 8px;
+            accent-color: #173b67;
+        }
+
+        .skill-card select {
+            width: 100%;
+            margin-top: 12px;
+            padding: 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+        }
+
+        button {
+            background: #173b67;
+            color: white;
+            padding: 12px 22px;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #28578c;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #526174;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>PathPilot - My Skills</h1>
+    <p>Build your skills. Discover your opportunities.</p>
+</header>
+
+<nav>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('opportunities') }}">Opportunities</a>
+    <a href="{{ url_for('skills') }}">My Skills</a>
+    <a href="{{ url_for('student_logout') }}">Logout</a>
+</nav>
+
+<div class="container">
+
+    <div class="intro">
+        <h2>Select Your Skills</h2>
+        <p>Choose the skills you know and select your current proficiency level.</p>
+        <p>You can update your skills as you learn more.</p>
+    </div>
+
+    <form id="skillsForm">
+
+        <div class="skill-section">
+            <h2>1. Programming Languages</h2>
+            <div class="skill-grid">
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="C"> C Programming</label>
+                    <select name="level_C">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="Java"> Java</label>
+                    <select name="level_Java">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="Python"> Python</label>
+                    <select name="level_Python">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="JavaScript"> JavaScript</label>
+                    <select name="level_JavaScript">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="skill-section">
+            <h2>2. Web Development</h2>
+            <div class="skill-grid">
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="HTML"> HTML</label>
+                    <select name="level_HTML">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="CSS"> CSS</label>
+                    <select name="level_CSS">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="React"> React</label>
+                    <select name="level_React">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="skill-section">
+            <h2>3. Database Skills</h2>
+            <div class="skill-grid">
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="MySQL"> MySQL</label>
+                    <select name="level_MySQL">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="SQL"> SQL</label>
+                    <select name="level_SQL">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="skill-section">
+            <h2>4. Computer Science Fundamentals</h2>
+            <div class="skill-grid">
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="DSA"> Data Structures and Algorithms</label>
+                    <select name="level_DSA">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="OOP"> Object-Oriented Programming</label>
+                    <select name="level_OOP">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="DBMS"> DBMS</label>
+                    <select name="level_DBMS">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="Operating Systems"> Operating Systems</label>
+                    <select name="level_Operating Systems">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="skill-section">
+            <h2>5. Tools and Professional Skills</h2>
+            <div class="skill-grid">
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="Git"> Git and GitHub</label>
+                    <select name="level_Git">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="Problem Solving"> Problem Solving</label>
+                    <select name="level_Problem Solving">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+                <div class="skill-card">
+                    <label><input type="checkbox" name="skills" value="Communication"> Communication</label>
+                    <select name="level_Communication">
+                        <option>Beginner</option>
+                        <option>Intermediate</option>
+                        <option>Advanced</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+
+        <button type="submit">Save My Skills</button>
+        <p id="message"></p>
+
+    </form>
+
+</div>
+
+<footer>
+    <p>PathPilot | Student Skill-to-Opportunity Intelligence</p>
+</footer>
+
+
+<script>
+    const form = document.getElementById("skillsForm");
+    const message = document.getElementById("message");
+
+    // Load skills already saved in MySQL.
+    async function loadSkills() {
+        try {
+            const response = await fetch("/api/student-skills");
+
+            if (response.status === 401) {
+                window.location.href = "/login";
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error("Could not load skills.");
+            }
+
+            const savedSkills = await response.json();
+
+            savedSkills.forEach(skill => {
+                const checkbox = Array.from(
+                    document.querySelectorAll('input[name="skills"]')
+                ).find(input => input.value === skill.skill_name);
+
+                if (checkbox) {
+                    checkbox.checked = true;
+
+                    const select = checkbox
+                        .closest(".skill-card")
+                        .querySelector("select");
+
+                    select.value = skill.proficiency || "Beginner";
+                }
+            });
+        } catch (error) {
+            message.textContent = "Could not load saved skills.";
+        }
+    }
+
+    // Save selected skills in MySQL.
+    form.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const selected = document.querySelectorAll(
+            'input[name="skills"]:checked'
+        );
+
+        const skills = Array.from(selected).map(checkbox => {
+            const select = checkbox
+                .closest(".skill-card")
+                .querySelector("select");
+
+            return {
+                name: checkbox.value,
+                proficiency: select.value
+            };
+        });
+
+        message.textContent = "Saving your skills...";
+
+        try {
+            const response = await fetch("/api/student-skills", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ skills: skills })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || "Saving failed.");
+            }
+
+            message.textContent = result.message;
+        } catch (error) {
+            message.textContent = error.message;
+        }
+    });
+
+    loadSkills();
+</script>
+
+
+</body>
+</html>

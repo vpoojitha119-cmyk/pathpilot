@@ -1,0 +1,440 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PathPilot - Internship Opportunities</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f3ff;
+            color: #252344;
+        }
+
+        header {
+            background: #5b4bdb;
+            color: white;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 18px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4938c5;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .search-filters {
+            max-width: 1060px;
+            margin: 25px auto;
+            padding: 22px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #00000010;
+        }
+
+        .search-filters h2 {
+            margin-top: 0;
+            color: #4938c5;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-controls input,
+        .filter-controls select {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px;
+            border: 1px solid #d5d0f5;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        .filter-controls button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 7px;
+            background: #5b4bdb;
+            color: white;
+            cursor: pointer;
+        }
+
+        .filter-controls button:hover {
+            background: #4030b5;
+        }
+
+        .filter-controls .clear-btn {
+            background: #777;
+        }
+
+        #resultCount {
+            color: #666;
+            margin-bottom: 18px;
+        }
+
+        #opportunities {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #00000010;
+        }
+
+        .card h2 {
+            color: #4938c5;
+            margin-top: 0;
+        }
+
+        .company {
+            font-weight: bold;
+        }
+
+        .stipend {
+            color: #16834a;
+            font-weight: bold;
+        }
+
+        .apply-btn {
+            display: inline-block;
+            background: #5b4bdb;
+            color: white;
+            padding: 11px 18px;
+            text-decoration: none;
+            border: none;
+            border-radius: 7px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .apply-btn:hover {
+            background: #4030b5;
+        }
+
+        #message {
+            text-align: center;
+            padding: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #666;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 20px;
+            }
+
+            nav a {
+                margin-left: 0;
+                margin-right: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h2>PathPilot</h2>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/opportunities">Opportunities</a>
+            <a href="/skills">Skills</a>
+            <a href="/login">Login</a>
+        </nav>
+    </header>
+
+    <section class="search-filters">
+        <h2>Find Your Internship</h2>
+
+        <div class="filter-controls">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search job title or company..."
+            >
+
+            <select id="stipendFilter">
+                <option value="0">All Stipends</option>
+                <option value="5000">₹5,000 and above</option>
+                <option value="7000">₹7,000 and above</option>
+                <option value="8000">₹8,000 and above</option>
+                <option value="10000">₹10,000 and above</option>
+            </select>
+
+            <select id="skillFilter">
+                <option value="">All Skills</option>
+                <option value="java">Java</option>
+                <option value="python">Python</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="javascript">JavaScript</option>
+            </select>
+
+            <button type="button" onclick="filterInternships()">
+                Search
+            </button>
+
+            <button
+                type="button"
+                class="clear-btn"
+                onclick="resetFilters()"
+            >
+                Clear Filters
+            </button>
+        </div>
+    </section>
+
+    <div class="container">
+        <h1>Explore Internship Opportunities</h1>
+
+        <p class="subtitle">
+            Discover opportunities and take the next step in your career.
+        </p>
+
+        <p id="message">Loading opportunities...</p>
+        <p id="resultCount"></p>
+
+        <div id="opportunities"></div>
+    </div>
+
+    <footer>
+        <p>PathPilot - Your path to a better career.</p>
+    </footer>
+
+    <script>
+        let allJobs = [];
+
+        async function loadOpportunities() {
+            const message = document.getElementById("message");
+
+            try {
+                message.textContent = "Loading opportunities...";
+
+                const response = await fetch("/api/opportunities");
+
+                if (!response.ok) {
+                    throw new Error("Server error: " + response.status);
+                }
+
+                const jobs = await response.json();
+
+                if (!Array.isArray(jobs)) {
+                    throw new Error("Invalid internship data received.");
+                }
+
+                allJobs = jobs;
+
+                filterInternships();
+
+            } catch (error) {
+                console.error("Error loading opportunities:", error);
+
+                document.getElementById("opportunities").innerHTML = "";
+                document.getElementById("resultCount").textContent = "";
+
+                message.textContent =
+                    "Unable to load internships. " + error.message;
+            }
+        }
+
+        function getStipendAmount(stipend) {
+            if (stipend === null || stipend === undefined) {
+                return 0;
+            }
+
+            const amount = String(stipend).replace(/,/g, "").match(/\d+/);
+
+            return amount ? Number(amount[0]) : 0;
+        }
+
+        function filterInternships() {
+            const searchText = document
+                .getElementById("searchInput")
+                .value.trim()
+                .toLowerCase();
+
+            const minimumStipend = Number(
+                document.getElementById("stipendFilter").value
+            );
+
+            const selectedSkill = document
+                .getElementById("skillFilter")
+                .value.toLowerCase();
+
+            const filteredJobs = allJobs.filter(function(job) {
+                const title = String(job.title || "").toLowerCase();
+                const company = String(job.company || "").toLowerCase();
+                const description = String(job.description || "").toLowerCase();
+
+                const skills = Array.isArray(job.skills)
+                    ? job.skills.join(" ").toLowerCase()
+                    : String(job.skills || job.required_skills || "").toLowerCase();
+
+                const searchMatch =
+                    title.includes(searchText) ||
+                    company.includes(searchText);
+
+                const stipendAmount = getStipendAmount(job.stipend);
+
+                const stipendMatch =
+                    minimumStipend === 0 ||
+                    stipendAmount >= minimumStipend;
+
+                const skillText = title + " " + description + " " + skills;
+
+                const skillMatch =
+                    selectedSkill === "" ||
+                    skillText.includes(selectedSkill);
+
+                return searchMatch && stipendMatch && skillMatch;
+            });
+
+            displayInternships(filteredJobs);
+        }
+
+        function displayInternships(jobs) {
+            const container = document.getElementById("opportunities");
+            const message = document.getElementById("message");
+            const resultCount = document.getElementById("resultCount");
+
+            container.innerHTML = "";
+
+            if (jobs.length === 0) {
+                message.textContent = "No internships match your filters.";
+                resultCount.textContent = "0 internships found";
+                return;
+            }
+
+            message.textContent = "";
+            resultCount.textContent =
+                jobs.length + " internship(s) found";
+
+            jobs.forEach(function(job) {
+                const card = document.createElement("div");
+                card.className = "card";
+
+                const title = document.createElement("h2");
+                title.textContent = job.title || "Internship";
+
+                const company = document.createElement("p");
+                company.className = "company";
+                company.textContent = "Company: " + (job.company || "Not specified");
+
+                const description = document.createElement("p");
+                description.textContent =
+                    job.description || "No description available.";
+
+                const stipend = document.createElement("p");
+                stipend.className = "stipend";
+                stipend.textContent =
+                    "Stipend: " +
+                    (job.stipend !== null && job.stipend !== undefined &&
+                     job.stipend !== ""
+                        ? job.stipend
+                        : "Not specified");
+
+                card.appendChild(title);
+                card.appendChild(company);
+                card.appendChild(description);
+                card.appendChild(stipend);
+
+                const form = document.createElement("form");
+                form.method = "POST";
+                form.action = "/apply/" + job.opportunity_id;
+
+                const button = document.createElement("button");
+                button.type = "submit";
+                button.textContent = "Apply";
+                button.className = "apply-btn";
+
+                form.appendChild(button);
+                card.appendChild(form);
+
+                if (job.application_url) {
+                    const link = document.createElement("a");
+
+                    link.href = job.application_url;
+                    link.textContent = "View External Application";
+                    link.className = "apply-btn";
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
+
+                    card.appendChild(link);
+                }
+
+                container.appendChild(card);
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById("searchInput").value = "";
+            document.getElementById("stipendFilter").value = "0";
+            document.getElementById("skillFilter").value = "";
+
+            filterInternships();
+        }
+
+        document.getElementById("searchInput").addEventListener(
+            "input",
+            filterInternships
+        );
+
+        document.getElementById("stipendFilter").addEventListener(
+            "change",
+            filterInternships
+        );
+
+        document.getElementById("skillFilter").addEventListener(
+            "change",
+            filterInternships
+        );
+
+        loadOpportunities();
+    </script>
+
+</body>
+</html>

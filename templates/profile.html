@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PathPilot - Student Profile</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f3ff;
+            color: #252344;
+        }
+
+        header {
+            background: #5b4bdb;
+            color: white;
+            padding: 20px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 16px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #00000010;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4938c5;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 7px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d5d0f5;
+            border-radius: 7px;
+            font-size: 15px;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid #aaa0ff;
+        }
+
+        .save-btn {
+            width: 100%;
+            margin-top: 24px;
+            padding: 13px;
+            background: #5b4bdb;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background: #4030b5;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            background: #eeeaff;
+        }
+
+        .student-id {
+            text-align: center;
+            color: #666;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 18px;
+            text-align: center;
+            color: #4938c5;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 20px;
+            }
+
+            nav a {
+                margin-left: 0;
+                margin-right: 12px;
+            }
+
+            .container {
+                margin: 20px;
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>PathPilot</h2>
+    <nav>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/opportunities">Internships</a>
+        <a href="/skills">Skills</a>
+        <a href="/my-applications">Applications</a>
+        <a href="/logout">Logout</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>My Student Profile</h1>
+    <p class="subtitle">View and update your saved information.</p>
+
+    <p class="student-id">
+        Student ID: {{ student.student_id }}
+    </p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="message" role="status">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('profile') }}">
+
+        <label for="name">Full Name</label>
+        <input
+            type="text"
+            id="name"
+            name="name"
+            maxlength="100"
+            value="{{ student.name }}"
+            required
+        >
+
+        <label for="email">Email Address</label>
+        <input
+            type="email"
+            id="email"
+            name="email"
+            maxlength="100"
+            value="{{ student.email }}"
+            required
+        >
+
+        <label for="branch">Branch / Department</label>
+        <input
+            type="text"
+            id="branch"
+            name="branch"
+            maxlength="50"
+            value="{{ student.branch or '' }}"
+            required
+        >
+
+        <label for="year">Academic Year</label>
+        <select id="year" name="year" required>
+            <option value="">Select year</option>
+            {% for y in range(1, 9) %}
+                <option
+                    value="{{ y }}"
+                    {% if student.year == y %}selected{% endif %}
+                >
+                    Year {{ y }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="save-btn">
+            Save Profile
+        </button>
+    </form>
+
+    <a href="/dashboard" class="back-link">
+        Back to Dashboard
+    </a>
+</div>
+
+</body>
+</html>

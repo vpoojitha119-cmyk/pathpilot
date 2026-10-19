@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PathPilot Notifications</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            margin: 0;
+        }
+
+        header {
+            background: #173b67;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #cccccc;
+        }
+
+        .unread {
+            border-left: 5px solid #173b67;
+        }
+
+        .read {
+            border-left: 5px solid #cccccc;
+        }
+
+        .button {
+            display: inline-block;
+            background: #173b67;
+            color: white;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .message {
+            padding: 10px;
+            background: #e8f5e9;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>PathPilot</h1>
+    <p>My Notifications</p>
+</header>
+
+<div class="container">
+
+    <a class="button" href="{{ url_for('dashboard') }}">
+        Back to Dashboard
+    </a>
+
+    <h2>My Notifications</h2>
+
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+        <p class="message">{{ message }}</p>
+    {% endfor %}
+
+    {% if notifications %}
+        {% for notification in notifications %}
+            <div class="card {% if notification.is_read %}read{% else %}unread{% endif %}">
+
+                <p><strong>{{ notification.message }}</strong></p>
+
+                <p>
+                    Date: {{ notification.created_at }}
+                </p>
+
+                <p>
+                    Status:
+                    {% if notification.is_read %}
+                        Read
+                    {% else %}
+                        Unread
+                    {% endif %}
+                </p>
+
+                {% if not notification.is_read %}
+                    <form method="POST"
+                          action="{{ url_for('mark_notification_read', notification_id=notification.notification_id) }}">
+                        <button class="button" type="submit">
+                            Mark as Read
+                        </button>
+                    </form>
+                {% endif %}
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="card">
+            <p>You have no notifications yet.</p>
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

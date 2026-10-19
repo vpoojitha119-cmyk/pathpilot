@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PathPilot Admin Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 320px;
+            box-shadow: 0 4px 15px #0002;
+        }
+
+        h2 { text-align: center; color: #2563eb; }
+
+        label { display: block; margin-top: 15px; }
+
+        input {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 11px;
+            margin-top: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: #2563eb;
+            color: white;
+            border: 0;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .error { color: #dc2626; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h2>PathPilot Admin</h2>
+        <p>Log in to manage internships.</p>
+
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <p class="error">{{ message }}</p>
+        {% endfor %}
+
+        <form method="POST" action="{{ url_for('admin_login') }}">
+            <label for="username">Username</label>
+            <input id="username" name="username"
+                   autocomplete="username" required>
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password"
+                   autocomplete="current-password" required>
+
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>

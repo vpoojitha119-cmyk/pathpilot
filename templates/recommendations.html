@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>PathPilot - Smart Recommendations</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #222;
+        }
+
+        header {
+            background: #173b70;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        nav {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        nav a {
+            display: inline-block;
+            margin: 5px;
+            color: #173b70;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 18px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000010;
+        }
+
+        .match {
+            color: #147d45;
+            font-weight: bold;
+        }
+
+        .skill {
+            display: inline-block;
+            background: #e1f4e8;
+            color: #17683c;
+            padding: 6px 10px;
+            margin: 4px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        .apply {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 10px 16px;
+            background: #173b70;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .empty {
+            text-align: center;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+        .missing-skills {
+    margin-top: 16px;
+    padding: 12px;
+    background: #fff4e5;
+    border-radius: 8px;
+}
+
+.missing-skills h4 {
+    margin-top: 0;
+}
+
+.missing-skill {
+    display: inline-block;
+    background: #ffe0b2;
+    color: #7a4100;
+    padding: 6px 10px;
+    margin: 4px;
+    border-radius: 15px;
+    font-size: 14px;
+}
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>PathPilot</h1>
+        <p>Smart Internship Recommendations</p>
+    </header>
+
+    <nav>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('skills') }}">My Skills</a>
+        <a href="{{ url_for('opportunities') }}">All Internships</a>
+        <a href="{{ url_for('student_logout') }}">Logout</a>
+    </nav>
+
+    <main class="container">
+        <h2>Recommended For You</h2>
+
+        <p>
+            These internships match the skills saved in your profile.
+        </p>
+
+        {% if not has_skills %}
+
+            <div class="empty">
+                <h3>No saved skills yet</h3>
+                <p>Save your skills to receive internship recommendations.</p>
+                <a href="{{ url_for('skills') }}">Add My Skills</a>
+            </div>
+
+        {% elif recommendations %}
+
+            {% for internship in recommendations %}
+                
+              
+<div class="card">
+    <h3>{{ internship.title }}</h3>
+
+    <p>
+        <strong>Company:</strong>
+        {{ internship.company }}
+    </p>
+
+    <p>{{ internship.description }}</p>
+
+    <p>
+        <strong>Stipend:</strong>
+        {{ internship.stipend }}
+    </p>
+
+    <p class="match">
+        Skill Match: {{ internship.match_percent }}%
+    </p>
+
+    <h4>Matching Skills</h4>
+
+    {% for skill in internship.matched_skills %}
+        <span class="skill">{{ skill }}</span>
+    {% else %}
+        <p>No matching skills yet.</p>
+    {% endfor %}
+
+    <div class="missing-skills">
+        <h4>Skills to Learn</h4>
+
+        {% if internship.missing_skills %}
+            {% for skill in internship.missing_skills %}
+                <span class="missing-skill">{{ skill }}</span>
+            {% endfor %}
+        {% else %}
+            <p>You have all the listed skills!</p>
+        {% endif %}
+    </div>
+
+    {% if internship.application_url %}
+        <br>
+        <a
+            class="apply"
+            href="{{ internship.application_url }}"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            View Application
+        </a>
+    {% endif %}
+</div>
+
+                <div class="card">
+                    <h3>{{ internship.title }}</h3>
+
+                    <p>
+                        <strong>Company:</strong>
+                        {{ internship.company }}
+                    </p>
+
+                    <p>{{ internship.description }}</p>
+
+                    <p>
+                        <strong>Stipend:</strong>
+                        {{ internship.stipend }}
+                    </p>
+
+                    <p class="match">
+                        Skill Match: {{ internship.match_percent }}%
+                    </p>
+
+                    <h4>Matching Skills</h4>
+
+                    {% for skill in internship.matched_skills %}
+                        <span class="skill">{{ skill }}</span>
+                    {% endfor %}
+
+                    {% if internship.application_url %}
+                        <br>
+                        <a
+                            class="apply"
+                            href="{{ internship.application_url }}"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            View Application
+                        </a>
+                    {% endif %}
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+                <h3>No matching internships found</h3>
+                <p>
+                    Try adding more skills or checking the
+                    available internships.
+                </p>
+                <a href="{{ url_for('skills') }}">Update My Skills</a>
+                <br><br>
+                <a href="{{ url_for('opportunities') }}">View All Internships</a>
+            </div>
+
+        {% endif %}
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PathPilot - Manage Applications</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #222;
+        }
+
+        header {
+            background: #173b67;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 25px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 16px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #cccccc;
+        }
+
+        select, button {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 8px;
+        }
+
+        button {
+            background: #173b67;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #28578c;
+        }
+
+        a {
+            color: #173b67;
+            font-weight: bold;
+        }
+
+        .message {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 12px 0;
+        }
+
+        form {
+            margin-top: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>PathPilot Admin</h1>
+        <p>Manage Student Applications</p>
+    </header>
+
+    <main class="container">
+        <p>
+            <a href="{{ url_for('admin') }}">Back to Admin Dashboard</a>
+            |
+           <form method="POST" action="{{ url_for('admin_logout') }}">
+    <button type="submit">Logout</button>
+</form>
+        </p>
+
+        <h2>All Applications</h2>
+
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <p class="message">{{ message }}</p>
+        {% endfor %}
+
+        {% if applications %}
+            {% for application in applications %}
+                <div class="card">
+                    <h3>{{ application.internship_title }}</h3>
+
+                    <p>
+                        <strong>Company:</strong>
+                        {{ application.company }}
+                    </p>
+
+                    <p>
+                        <strong>Student:</strong>
+                        {{ application.student_name }}
+                    </p>
+
+                    <p>
+                        <strong>Email:</strong>
+                        {{ application.student_email }}
+                    </p>
+
+                    <p>
+                        <strong>Applied on:</strong>
+                        {{ application.applied_date }}
+                    </p>
+
+                    <p>
+                        <strong>Current status:</strong>
+                        {{ application.status }}
+                    </p>
+
+                    <form
+                        method="POST"
+                        action="{{ url_for(
+                            'update_application_status',
+                            application_id=application.application_id
+                        ) }}"
+                    >
+                        <label
+                            for="status-{{ application.application_id }}"
+                        >
+                            Change status:
+                        </label>
+
+                        <select
+                            id="status-{{ application.application_id }}"
+                            name="status"
+                            required
+                        >
+                            <option value="Applied"
+                                {% if application.status == 'Applied' %}
+                                    selected
+                                {% endif %}>
+                                Applied
+                            </option>
+
+                            <option value="Shortlisted"
+                                {% if application.status == 'Shortlisted' %}
+                                    selected
+                                {% endif %}>
+                                Shortlisted
+                            </option>
+
+                            <option value="Rejected"
+                                {% if application.status == 'Rejected' %}
+                                    selected
+                                {% endif %}>
+                                Rejected
+                            </option>
+                        </select>
+
+                        <button type="submit">Update Status</button>
+                    </form>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="card">
+                <p>No applications have been submitted yet.</p>
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+           

@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PathPilot Admin Dashboard</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f3ff;
+            margin: 0;
+            padding: 20px;
+            color: #29234d;
+        }
+
+        header {
+            background: #5b3cc4;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 25px auto;
+        }
+
+        .form-box, .list-box {
+            background: white;
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px #ddd;
+        }
+
+        input, textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            margin: 8px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background: #5b3cc4;
+            color: white;
+            padding: 11px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #43279e;
+        }
+
+        .delete-btn {
+            background: #c62828;
+        }
+
+        .job {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 12px 0;
+        }
+
+        .message {
+            font-weight: bold;
+        }
+
+        a {
+            color: #5b3cc4;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px #ddd;
+            border-left: 5px solid #5b3cc4;
+        }
+
+        .stat-card h3 {
+            margin-top: 0;
+            font-size: 16px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #5b3cc4;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 550px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>PathPilot Admin Dashboard</h1>
+        <p>Manage Internship Opportunities</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="list-box">
+            <h2>Dashboard Statistics</h2>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Students</h3>
+                    <p class="stat-number">{{ total_students }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Total Internships</h3>
+                    <p class="stat-number">{{ total_opportunities }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Total Applications</h3>
+                    <p class="stat-number">{{ total_applications }}</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Total Notifications</h3>
+                    <p class="stat-number">{{ total_notifications }}</p>
+                </div>
+            </div>
+        </div>
+
+        <p><a href="/">← Back to Home</a> |
+           <a href="/opportunities">View Opportunities</a></p>
+        <a href="{{ url_for('admin_applications') }}">
+    Manage Student Applications
+</a>
+        <div class="form-box">
+            <h2>Add New Internship</h2>
+
+            <p class="message" id="message"></p>
+
+            <form id="internshipForm">
+                <label>Internship Title</label>
+                <input id="title" required
+                       placeholder="Example: Java Intern">
+
+                <label>Company Name</label>
+                <input id="company" required
+                       placeholder="Example: ABC Technologies">
+
+                <label>Description</label>
+                <textarea id="description" required
+                          placeholder="Describe the internship"></textarea>
+
+                <label>Monthly Stipend</label>
+                <input id="stipend" required
+                       placeholder="Example: 8000 per month">
+
+                <label>Application URL</label>
+                <input id="application_url" type="url" required
+                       placeholder="https://example.com/job">
+
+                <button type="submit">Add Internship</button>
+            </form>
+        </div>
+
+        <div class="list-box">
+            <h2>Existing Internships</h2>
+            <div id="internshipList">Loading internships...</div>
+        </div>
+    </div>
+
+    
+<script>
+    async function loadInternships() {
+        const list = document.getElementById("internshipList");
+
+        try {
+            const response = await fetch("/api/opportunities");
+
+            if (!response.ok) {
+                throw new Error("Could not load internships");
+            }
+
+            const jobs = await response.json();
+            list.innerHTML = "";
+
+            if (jobs.length === 0) {
+                list.textContent = "No internships found.";
+                return;
+            }
+
+            jobs.forEach(function(job) {
+                const card = document.createElement("div");
+                card.className = "job";
+
+                const title = document.createElement("h3");
+                title.textContent = job.title;
+
+                const company = document.createElement("p");
+                company.textContent = "Company: " + job.company;
+
+                const stipend = document.createElement("p");
+                stipend.textContent = "Stipend: " + job.stipend;
+
+                const description = document.createElement("p");
+                description.textContent = job.description;
+
+                card.append(title, company, description, stipend);
+
+                // EDIT BUTTON
+                const editButton = document.createElement("button");
+                editButton.textContent = "Edit";
+
+                editButton.onclick = function() {
+                    document.getElementById("title").value = job.title;
+                    document.getElementById("company").value = job.company;
+                    document.getElementById("description").value =
+                        job.description;
+                    document.getElementById("stipend").value = job.stipend;
+                    document.getElementById("application_url").value =
+                        job.application_url || "";
+
+                    document.getElementById("message").textContent =
+                        "Edit the details above, then click Update Internship.";
+
+                    document.getElementById("internshipForm").dataset.editId =
+                        job.opportunity_id;
+
+                    document.getElementById("title").focus();
+                };
+
+                card.appendChild(editButton);
+
+                // DELETE BUTTON
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.className = "delete-btn";
+
+                deleteButton.onclick = async function() {
+                    const confirmed = confirm(
+                        "Are you sure you want to delete this internship?"
+                    );
+
+                    if (!confirmed) return;
+
+                    try {
+                        const result = await fetch(
+                            "/api/opportunities/" + job.opportunity_id,
+                            { method: "DELETE" }
+                        );
+
+                        const data = await result.json();
+
+                        if (!result.ok) {
+                            throw new Error(
+                                data.error || "Could not delete internship."
+                            );
+                        }
+
+                        document.getElementById("message").textContent =
+                            "Internship deleted successfully.";
+
+                        loadInternships();
+                    } catch (error) {
+                        document.getElementById("message").textContent =
+                            error.message;
+                    }
+                };
+
+                card.appendChild(deleteButton);
+                list.appendChild(card);
+            });
+
+        } catch (error) {
+            list.textContent =
+                "Could not load internships. Check that Flask is running.";
+        }
+    }
+
+    // ADD OR UPDATE INTERNSHIP
+    document.getElementById("internshipForm").onsubmit =
+        async function(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("internshipForm");
+            const editId = form.dataset.editId;
+
+            const internship = {
+                title: document.getElementById("title").value.trim(),
+                company: document.getElementById("company").value.trim(),
+                description: document.getElementById("description").value.trim(),
+                stipend: document.getElementById("stipend").value.trim(),
+                application_url:
+                    document.getElementById("application_url").value.trim()
+            };
+
+            const isEditing = Boolean(editId);
+
+            try {
+                const response = await fetch(
+                    isEditing
+                        ? "/api/opportunities/" + editId
+                        : "/api/opportunities",
+                    {
+                        method: isEditing ? "PUT" : "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(internship)
+                    }
+                );
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        result.error || "Could not save internship."
+                    );
+                }
+
+                document.getElementById("message").textContent =
+                    isEditing
+                        ? "Internship updated successfully!"
+                        : "Internship added successfully!";
+
+                form.reset();
+                delete form.dataset.editId;
+
+                const submitButton = form.querySelector(
+                    'button[type="submit"]'
+                );
+
+                submitButton.textContent = "Add Internship";
+
+                await loadInternships();
+
+            } catch (error) {
+                document.getElementById("message").textContent =
+                    error.message || "Something went wrong.";
+            }
+        };
+
+    // Change the form button text when editing
+    document.getElementById("internshipForm").addEventListener(
+        "input",
+        function() {
+            if (this.dataset.editId) {
+                this.querySelector('button[type="submit"]').textContent =
+                    "Update Internship";
+            }
+        }
+    );
+
+    loadInternships();
+</script>
+
+</body>
+</html>

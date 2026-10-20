@@ -63,7 +63,7 @@ def unauthorized():
 
 
 
-_
+
 def get_db_connection():
     db_host = os.getenv("DB_HOST")
     db_user = os.getenv("DB_USER")

@@ -61,13 +61,31 @@ def unauthorized():
 # MYSQL CONNECTION
 # --------------------------------------------------
 
+
+
+_
 def get_db_connection():
+    db_host = os.getenv("DB_HOST")
+    db_user = os.getenv("DB_USER")
+    db_password = os.getenv("DB_PASSWORD")
+    db_name = os.getenv("DB_NAME")
+    db_port = os.getenv("DB_PORT")
+    db_ssl_ca = os.getenv("DB_SSL_CA")
+
+    if not all([db_host, db_user, db_password, db_name, db_port]):
+        raise RuntimeError("Database environment variables are missing")
+
     return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password=os.getenv("DB_PASSWORD"),
-        database="pathpilot"
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_name,
+        port=int(db_port),
+        ssl_ca=db_ssl_ca or None,
+        connection_timeout=15
     )
+
+
 
 
 # --------------------------------------------------
